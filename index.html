@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+        <title>JS-Aruco Markers</title>
+        <style type="text/css">
+            canvas {
+                margin: 5px;
+                float: left;
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="markers"></div>
+        <script type="text/javascript" src="cv.js"></script>
+        <script type="text/javascript" src="aruco.js"></script>
+        <script type="text/javascript" src="markers.js"></script>
+        <script type="text/javascript"> 
+            window.onload = function(){
+                var div = document.getElementById("markers");
+                var detector =  new AR.Detector();
+                var width=160, height=160,pad=15;
+
+                var i=0;
+                var limit = Math.pow(4,5);
+
+                var hash = location.hash.replace("#",'');
+                if(hash.length >= 1) {
+                    i=parseInt(hash);
+                    limit=parseInt(hash)+1;
+                }
+
+                while(i<limit) {
+                    var canvas  = makeMarker(i,width,height);
+                    var ctx = canvas.getContext('2d');
+                    var markers = detector.detect(ctx.getImageData(0,0,canvas.width,canvas.height));
+                    ctx.font = "bold 10px sans-serif";
+                    ctx.fillStyle = 'red';
+                    ctx.fillText("id: "+markers[0].id,10,10);
+                    div.appendChild(canvas);
+                    i++;
+                }
+            };
+        </script>
+    </body>
+</html>
+
